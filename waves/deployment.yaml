@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waves-web
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: waves-web
+  template:
+    metadata:
+      labels:
+        app: waves-web
+    spec:
+      containers:
+        - name: web
+          image: gcr.io/google-samples/gb-frontend:v5
+          ports:
+            - containerPort: 80
