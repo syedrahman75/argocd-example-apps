@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: envs
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: dev
+          - env: prod
+            namespace: prod
+  template:
+    metadata:
+      name: guestbook-{{env}}
+    spec:
+      project: platform
+      source:
+        repoURL: https://github.com/syedrahman75/argocd-example-apps
+        targetRevision: topic-11-projects
+        path: guestbook
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
